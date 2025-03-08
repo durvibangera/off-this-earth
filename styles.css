@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    background: #FFFFE8;
+    color: black;
+}
+
+.parallax {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-layer {
+    position: absolute;
+    width: 100%;
+    height: 120vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.layer1 {
+    background-image: url('clouds-top.jpg');
+    transform: translateY(0px) scale(1.5);
+    z-index: 3;
+}
+
+.layer2 {
+    background-image: url('clouds.jpg');
+    transform: translateY(0px) scale(1.3);
+    z-index: 2;
+}
+
+.layer3 {
+    background-image: url('clouds-bottom.jpg');
+    transform: translateY(0px) scale(1.1);
+    z-index: 1;
+}
+
+.logo {
+    position: absolute;
+    font-size: 5rem;
+    font-weight: bold;
+    z-index: 4;
+    transform: translateY(0px) scale(1);
+}
+
+.content {
+    padding: 100px 50px;
+    text-align: center;
+}
+
+/* Sections styling - updated to match the image */
+.sections {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 50px;
+    /* Removed blue background */
+    margin: 0 20px;
+}
+
+.video-container {
+    background: black; /* Black background for video container */
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    /* Border styling */
+    border: 4px solid white;
+    outline: 1px solid #888;
+    padding: 2px;
+}
+
+.video-container img {
+    width: 100%;
+    height: 100%;
+}
+
+.side-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.recommendations, .community-feed {
+    height: 140px;
+    background: #FFD0D0; /* Light pink background for side containers */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    /* Border styling */
+    border: 4px solid white;
+    outline: 1px solid #888;
+    padding: 2px;
+}
+
+/* Carousel specific styles */
+.carousel {
+    height: 100%;
+}
+
+.carousel-inner {
+    height: 100%;
+}
+
+.carousel-item {
+    height: 100%;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+}

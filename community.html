@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y2K Thrift Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matcha: #CDE990;
+            --strawberry: #FFD4D4;
+            --cream: #FFFFE8;
+            --pink: #FF90BC;
+            --border-color: #333;
+        }
+        
+        body {
+            background-color: var(--cream);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Bubblegum Sans', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .window {
+            width: 90%;
+            max-width: 1200px;
+            border: 5px solid var(--border-color);
+            background: var(--matcha);
+            box-shadow: 8px 8px 0px var(--border-color);
+            padding: 0;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        
+        .title-bar {
+            background: var(--strawberry);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            border-bottom: 3px solid var(--border-color);
+        }
+        
+        .title-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .window-btn.close {
+            background-color: #ff6b6b;
+        }
+        
+        .window-btn.minimize {
+            background-color: #ffd93d;
+        }
+        
+        .window-btn.maximize {
+            background-color: #6bcb77;
+        }
+        
+        .window-content {
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 L20 0 L40 20 L20 40 Z" fill="rgba(255,208,208,0.2)"/></svg>');
+        }
+
+        .main-title {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--border-color);
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px var(--pink);
+        }
+        
+        /* Navigation */
+        .nav-container {
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .nav-item {
+            cursor: pointer;
+            padding: 8px 15px;
+            background-color: var(--strawberry);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            transition: all 0.2s;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+        
+        .nav-item:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+        }
+        
+        .nav-item:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        /* Post Item Section */
+        .post-item-section {
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .section-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background-color: var(--pink);
+            padding: 5px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 0px var(--border-color);
+        }
+        
+        .item-input {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            background-color: var(--cream);
+            resize: none;
+            margin-bottom: 10px;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 16px;
+        }
+        
+        .price-input {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .price-input label {
+            margin-right: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--border-color);
+        }
+        
+        .price-input input {
+            width: 100px;
+            padding: 8px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            background-color: var(--cream);
+            text-align: center;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+        }
+        
+        .photo-preview {
+            max-width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 2px dashed var(--border-color);
+            background-color: var(--cream);
+            display: none;
+            object-fit: cover;
+        }
+        
+        .input-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .photo-upload-label {
+            background: var(--strawberry);
+            border: 2px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+        
+        .photo-upload-label:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+        }
+        
+        .photo-upload-label:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        .photo-upload input[type="file"] {
+            display: none;
+        }
+        
+        .btn-custom {
+            background: var(--strawberry);
+            border: 2px solid var(--border-color);
+            font-size: 14px;
+            padding: 8px 15px;
+            font-family: 'Press Start 2P', cursive;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--border-color);
+            transition: all 0.1s;
+        }
+        
+        .btn-custom:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+        }
+        
+        .btn-custom:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        /* Item Feed Section */
+        .item-feed-section {
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .item {
+            background-color: var(--cream);
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .item-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--matcha);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            margin-right: 10px;
+        }
+        
+        .item-username {
+            font-weight: bold;
+            color: var(--border-color);
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 18px;
+        }
+        
+        .item-price {
+            margin-left: auto;
+            background-color: var(--pink);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 2px solid var(--border-color);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: white;
+        }
+        
+        .item-content {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 16px;
+            color: var(--border-color);
+        }
+        
+        .item-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px dashed var(--border-color);
+            overflow: hidden;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 200px;
+            display: block;
+            object-fit: cover;
+        }
+        
+        .item-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        
+        .item-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--border-color);
+            transition: all 0.2s;
+        }
+        
+        .item-action:hover {
+            color: var(--pink);
+            transform: scale(1.05);
+        }
+        
+        /* Y2K Decorative Elements */
+        .sticker {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="%23FFD4D4" stroke="%23333" stroke-width="2"/><path d="M30,30 Q40,20 50,30 Q60,40 50,50 Q40,60 30,50 Q20,40 30,30 Z" fill="%23FF90BC" stroke="%23333" stroke-width="2"/><circle cx="35" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><circle cx="45" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><path d="M32,45 Q40,52 48,45" stroke="%23333" stroke-width="2" fill="none"/></svg>');
+            transform: rotate(-15deg);
+            z-index: 2;
+            opacity: 0.85;
+        }
+        
+        .sticker-top-right {
+            top: -20px;
+            right: -20px;
+        }
+        
+        .sparkle {
+            position: fixed;
+            width: 25px;
+            height: 25px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0 L15 9 L25 12.5 L15 16 L12.5 25 L10 16 L0 12.5 L10 9 Z" fill="%23FF90BC" stroke="%23333" stroke-width="1"/></svg>');
+            z-index: -1;
+        }
+        
+        #sparkle1 { top: 50px; left: 10%; }
+        #sparkle2 { top: 150px; right: 15%; }
+        #sparkle3 { bottom: 100px; left: 20%; }
+        #sparkle4 { bottom: 50px; right: 10%; }
+        #sparkle5 { top: 250px; left: 30%; }
+        
+        .logo {
+            width: 180px;
+            display: block;
+            margin: 10px auto 20px;
+            filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.3));
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--cream);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--strawberry);
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Y2K Elements -->
+    <div class="sparkle" id="sparkle1"></div>
+    <div class="sparkle" id="sparkle2"></div>
+    <div class="sparkle" id="sparkle3"></div>
+    <div class="sparkle" id="sparkle4"></div>
+    <div class="sparkle" id="sparkle5"></div>
+
+    <div class="window">
+        <div class="title-bar">
+            <span>OTECommunityOS v1.0 </span>
+            <div class="title-buttons">
+                <div class="window-btn minimize"></div>
+                <div class="window-btn maximize"></div>
+                <div class="window-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="window-content">
+            <img src="logo.png" alt="Logo" class="logo">
+            <h1 class="main-title">✨ Y2K THRIFT COMMUNITY ✨</h1>
+            
+            <!-- Navigation -->
+            <div class="nav-container">
+                <nav class="nav">
+                    <div class="nav-item">Home</div>
+                    <div class="nav-item">Shop</div>
+                    <div class="nav-item">Messages</div>
+                    <div class="nav-item">Profile</div>
+                    <div class="nav-item">Favorites</div>
+                </nav>
+            </div>
+            
+            <!-- Post Item Section -->
+            <div class="post-item-section">
+                <div class="sticker sticker-top-right"></div>
+                <div class="section-title">POST NEW ITEM</div>
+                <textarea class="item-input" placeholder="Describe your item..."></textarea>
+                
+                <div class="price-input">
+                    <label for="price-input">Price: $</label>
+                    <input type="number" id="price-input" min="0" placeholder="0.00">
+                </div>
+                
+                <img id="photo-preview" class="photo-preview" src="" alt="Preview">
+                
+                <div class="input-buttons">
+                    <div class="photo-upload">
+                        <label for="photo-upload-input" class="photo-upload-label">
+                            📷 Add Photo
+                        </label>
+                        <input type="file" id="photo-upload-input" accept="image/*">
+                    </div>
+                    <button id="post-item" class="btn-custom">Post Item</button>
+                </div>
+            </div>
+            
+            <!-- Item Feed Section -->
+            <div class="item-feed-section">
+                <div class="section-title">COMMUNITY ITEMS</div>
+                <div class="item-grid">
+                    <!-- Item 1 -->
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-avatar">VB</div>
+                            <div class="item-username">VintageBabe</div>
+                            <div class="item-price">$25.00</div>
+                        </div>
+                        <div class="item-content">
+                            Authentic Y2K Baby Phat tank top! Pink with rhinestone details. Size M, barely worn. Perfect for that 2000s throwback look! 💖
+                        </div>
+                        <div class="item-image">
+                            <img src="/api/placeholder/400/320" alt="Baby Phat Tank Top">
+                        </div>
+                        <div class="item-actions">
+                            <div class="item-action">♥ Like</div>
+                            <div class="item-action">↺ Share</div>
+                            <div class="item-action">✉ Message</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-avatar">RD</div>
+                            <div class="item-username">RetroDenim</div>
+                            <div class="item-price">$35.99</div>
+                        </div>
+                        <div class="item-content">
+                            Early 2000s low-rise flare jeans with butterfly embroidery! These are SO cute and in amazing condition. Size 6, true Y2K style!
+                        </div>
+                        <div class="item-image">
+                            <img src="/api/placeholder/400/320" alt="Y2K Flare Jeans">
+                        </div>
+                        <div class="item-actions">
+                            <div class="item-action">♥ Like</div>
+                            <div class="item-action">↺ Share</div>
+                            <div class="item-action">✉ Message</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 3 -->
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-avatar">TP</div>
+                            <div class="item-username">ThriftPrincess</div>
+                            <div class="item-price">$18.50</div>
+                        </div>
+                        <div class="item-content">
+                            Original Juicy Couture velour zip-up hoodie in baby blue! Iconic early 2000s piece. Has the classic "Juicy" rhinestone text on the back. Size S.
+                        </div>
+                        <div class="item-image">
+                            <img src="/api/placeholder/400/320" alt="Juicy Couture Hoodie">
+                        </div>
+                        <div class="item-actions">
+                            <div class="item-action">♥ Like</div>
+                            <div class="item-action">↺ Share</div>
+                            <div class="item-action">✉ Message</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Photo upload preview functionality
+        const photoInput = document.getElementById('photo-upload-input');
+        const photoPreview = document.getElementById('photo-preview');
+        
+        photoInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Post new item functionality
+        document.getElementById('post-item').addEventListener('click', function() {
+            const itemDescription = document.querySelector('.item-input').value;
+            const itemPrice = document.getElementById('price-input').value;
+            const photoSrc = document.getElementById('photo-preview').src;
+            
+            if (itemDescription.trim() !== '' && itemPrice.trim() !== '') {
+                const itemGrid = document.querySelector('.item-grid');
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'item';
+                
+                newItem.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-avatar">ME</div>
+                        <div class="item-username">Y2KThrifter</div>
+                        <div class="item-price">$${parseFloat(itemPrice).toFixed(2)}</div>
+                    </div>
+                    <div class="item-content">
+                        ${itemDescription}
+                    </div>
+                    ${photoSrc ? `
+                    <div class="item-image">
+                        <img src="${photoSrc}" alt="Item Photo">
+                    </div>
+                    ` : ''}
+                    <div class="item-actions">
+                        <div class="item-action">♥ Like</div>
+                        <div class="item-action">↺ Share</div>
+                        <div class="item-action">✉ Message</div>
+                    </div>
+                `;
+                
+                itemGrid.insertBefore(newItem, itemGrid.firstChild);
+                
+                // Reset form
+                document.querySelector('.item-input').value = '';
+                document.getElementById('price-input').value = '';
+                document.getElementById('photo-preview').src = '';
+                document.getElementById('photo-preview').style.display = 'none';
+            } else {
+                alert('Please add a description and price for your item!');
+            }
+        });
+        
+        // Add floating animation to sparkles
+        const sparkles = document.querySelectorAll('.sparkle');
+        sparkles.forEach(sparkle => {
+            // Random initial position within 20px of its current position
+            const initialTop = parseInt(getComputedStyle(sparkle).top);
+            const initialLeft = parseInt(getComputedStyle(sparkle).left);
+            
+            // Set animation with random parameters
+            const duration = 3 + Math.random() * 4; // Between 3-7 seconds
+            const delay = Math.random() * 2; // Random delay up to 2 seconds
+            
+            sparkle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite alternate`;
+            
+            // Add keyframe animation dynamically
+            if (!document.querySelector('style#sparkle-animation')) {
+                const style = document.createElement('style');
+                style.id = 'sparkle-animation';
+                style.textContent = `
+                    @keyframes float {
+                        0% { transform: translate(0, 0) rotate(0deg); }
+                        100% { transform: translate(0, 15px) rotate(10deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    </script>
+</body>
+</html>

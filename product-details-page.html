@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off This Earth - Product Detail</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            background: #FFFFE8;
+            color: black;
+            padding-top: 0;
+        }
+
+        .navbar {
+            transition: all 0.3s ease;
+        }
+       
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: slideDown 0.5s;
+        }
+       
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .navbar-brand img {
+            filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+            height: 60px;
+        }
+       
+        .navbar-brand:hover img {
+            transform: scale(1.15);
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+
+        .product-thumbnails {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-right: 10px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            cursor: pointer;
+            overflow: hidden;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail.active {
+            border-color: #FFD0D0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-main {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            position: relative;
+            border: 5px solid white;
+            outline: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 0 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .add-cart-btn {
+            background: #FFD0D0;
+            color: black;
+        }
+
+        .add-cart-btn:hover {
+            background: #FFB0B0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .trade-btn {
+            background: #D0F0FF;
+            color: black;
+        }
+
+        .trade-btn:hover {
+            background: #B0E0FF;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .ar-btn {
+            background: #E8FFDA;
+            color: black;
+        }
+
+        .ar-btn:hover {
+            background: #D0FFC0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .side-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .more-like-this, .wardrobe-recommendations {
+            background: #FFD0D0;
+            border-radius: 12px;
+            padding: 10px;
+            height: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border: 5px solid white;
+            outline: 1px solid #888;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+       
+        .more-like-this:hover, .wardrobe-recommendations:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+        }
+
+        .side-title {
+            background: rgba(255,255,255,0.8);
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+            height: calc(100% - 40px);
+            padding: 0 5px;
+        }
+       
+        .recommendation-item {
+            overflow: hidden;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+       
+        .recommendation-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+       
+        .recommendation-item:hover img {
+            transform: scale(1.1);
+        }
+       
+        .recommendation-item:hover::after {
+            content: '+ View Item';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Chat box styles */
+        .chat-overlay {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 350px;
+            height: 400px;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-header {
+            background: #FFD0D0;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chat-title {
+            font-weight: bold;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .seller-message {
+            background: #E8F4FF;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+
+        .buyer-message {
+            background: #FFE8E8;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .send-btn {
+            background: #FFD0D0;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #FFB0B0;
+        }
+
+        /* AR overlay styles */
+        .ar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .ar-container {
+            width: 80%;
+            height: 80%;
+            background: black;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .ar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .ar-instructions {
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .size-description {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-left: 4px solid #FFD0D0;
+        }
+
+        .size-description p {
+            margin-bottom: 5px;
+        }
+
+        .product-seller {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .seller-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .seller-info {
+            font-size: 14px;
+        }
+
+        .seller-name {
+            font-weight: bold;
+        }
+
+        .seller-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+
+        .star-rating {
+            color: gold;
+        }
+       
+        .condition-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+            background: #e9f7ef;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-0" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                            <div class="dropdown-header">Tops</div>
+                            <a class="dropdown-item" href="#">T-shirts</a>
+                            <a class="dropdown-item" href="#">Shirts</a>
+                            <a class="dropdown-item" href="#">Crop Tops</a>
+                            <a class="dropdown-item" href="#">Shrugs</a>
+                            <a class="dropdown-item" href="#">Sweaters</a>
+                            <a class="dropdown-item" href="#">Jackets</a>
+                            <div class="dropdown-divider"></div>
+                           
+                            <div class="dropdown-header">Bottoms</div>
+                            <a class="dropdown-item" href="#">Pants</a>
+                            <a class="dropdown-item" href="#">Shorts</a>
+                            <a class="dropdown-item" href="#">Skirts</a>
+                            <a class="dropdown-item" href="#">Maxi</a>
+                            <a class="dropdown-item" href="#">Mini</a>
+                            <div class="dropdown-divider"></div>
+                           
+                            <div class="dropdown-header">Accessories</div>
+                            <a class="dropdown-item" href="#">Necklaces</a>
+                            <a class="dropdown-item" href="#">Earrings</a>
+                            <a class="dropdown-item" href="#">Bracelets</a>
+                            <a class="dropdown-item" href="#">Rings</a>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="mywardrobe.html">My Wardrobe</a></li>
+                    <li class="nav-item"><a class="nav-link" href="community.html">Community</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Likes</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+   
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mt-3">
+            <ol class="breadcrumb bg-transparent">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Tops</a></li>
+                <li class="breadcrumb-item"><a href="#">T-shirts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Boho Summer Top</li>
+            </ol>
+        </nav>
+    </div>
+   
+    <div class="product-container">
+        <div class="product-thumbnails">
+            <div class="thumbnail active" onclick="changeProductImage('top-1-main.png')">
+                <img src="top-1.png" alt="Main View">
+            </div>
+            <div class="thumbnail" onclick="changeProductImage('top-1-side.png')">
+                <img src="top-2.png" alt="Side View">
+            </div>
+            <div class="thumbnail" onclick="changeProductImage('top-1-back.png')">
+                <img src="top-3.png" alt="Back View">
+            </div>
+            <div class="thumbnail" onclick="changeProductImage('top-1-detail.png')">
+                <img src="top-4.png" alt="Detail View">
+            </div>
+            <div class="thumbnail" onclick="changeProductImage('top-1-model.png')">
+                <img src="top-5.png" alt="On Model">
+            </div>
+        </div>
+       
+        <div class="product-main">
+            <div class="product-image-container">
+                <img src="wardrobe\outfit\tops\top-1.png" alt="Boho Summer Top" class="product-image" id="mainProductImage">
+            </div>
+           
+            <div class="product-info">
+                <h2>Boho Summer Top</h2>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="condition-badge">Gently Used</span>
+                    <p class="text-success mb-0">Available for Purchase or Trade</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>$29.99</h3>
+                    <div class="badge badge-pill badge-warning p-2">4 items left</div>
+                </div>
+               
+                <p>Light and airy summer top with bohemian-inspired embroidery. Perfect for casual outings or beach days.</p>
+               
+                <div class="size-description">
+                    <h5>Size & Fit Details</h5>
+                    <p><strong>Listed Size:</strong> Small</p>
+                    <p><strong>Measurements:</strong> Bust: 36" / Length: 24" / Sleeve: 7"</p>
+                    <p><strong>Fits like:</strong> A relaxed small, could also fit medium frames</p>
+                    <p><strong>Material:</strong> 100% Cotton with embroidery details</p>
+                </div>
+               
+                <div class="product-seller">
+                    <img src="profile1.png" alt="Seller" class="seller-avatar">
+                    <div class="seller-info">
+                        <div class="seller-name">FashionGuru92</div>
+                        <div class="seller-rating">
+                            <span class="star-rating">★★★★☆</span>
+                            <span>4.8 (126 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="product-actions">
+                    <button class="action-button add-cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        Add to Cart
+                    </button>
+                    <button class="action-button trade-btn" onclick="openTradeChat()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Trade
+                    </button>
+                    <button class="action-button ar-btn" onclick="openARTryOn()">
+                        <i class="fas fa-camera"></i>
+                        Try On AR
+                    </button>
+                </div>
+            </div>
+        </div>
+       
+        <div class="side-container">
+            <div class="more-like-this">
+                <div class="side-title">More Like This</div>
+                <div class="recommendation-grid">
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\tops\top-2.png" alt="Similar Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\tops\top-3.png" alt="Similar Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\tops\top-4.png" alt="Similar Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\tops\top-5.png" alt="Similar Item">
+                    </div>
+                </div>
+            </div>
+           
+            <div class="wardrobe-recommendations">
+                <div class="side-title">Based on Your Wardrobe</div>
+                <div class="recommendation-grid">
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\bottoms\bottom-1.png" alt="Recommended Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\bottoms\bottom-2.png" alt="Recommended Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\bottoms\bottom-3.png" alt="Recommended Item">
+                    </div>
+                    <div class="recommendation-item">
+                        <img src="wardrobe\outfit\bottoms\bottom-4.png" alt="Recommended Item">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Chat Overlay -->
+    <div class="chat-overlay" id="tradeChat">
+        <div class="chat-header">
+            <div class="chat-title">Trade with FashionGuru92</div>
+            <button class="close-chat" onclick="closeTradeChat()">&times;</button>
+        </div>
+        <div class="chat-messages">
+            <div class="message seller-message">
+                Hi there! I see you're interested in my Boho Summer Top. What would you like to trade for it?
+            </div>
+            <div class="message buyer-message">
+                Hi! I have a nice denim jacket I'd like to trade. Would you be interested?
+            </div>
+            <div class="message seller-message">
+                That sounds interesting! Could you send me some photos of the jacket?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type your message...">
+            <button class="send-btn">Send</button>
+        </div>
+    </div>
+   
+    <!-- AR Try-On Overlay -->
+    <div class="ar-overlay" id="arTryOn">
+        <div class="ar-container">
+            <img src="ar-tryout.png" alt="AR Try-On View">
+            <button class="ar-close" onclick="closeARTryOn()">&times;</button>
+        </div>
+        <div class="ar-instructions">
+            <h4>Virtual Try-On</h4>
+            <p>Move around to see how this item looks from different angles. For best results, stand in a well-lit area.</p>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Sticky navbar
+        const navbar = document.getElementById("mainNav");
+        const navbarHeight = navbar.offsetHeight;
+        const sticky = navbar.offsetTop;
+       
+        window.onscroll = function() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky-nav");
+                document.body.style.paddingTop = navbarHeight + "px";
+            } else {
+                navbar.classList.remove("sticky-nav");
+                document.body.style.paddingTop = "0px";
+            }
+        };
+       
+        // Change product image when thumbnail is clicked
+        function changeProductImage(src) {
+            document.getElementById('mainProductImage').src = src;
+           
+            // Update active thumbnail
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+       
+        // Trade chat functions
+        function openTradeChat() {
+            document.getElementById('tradeChat').style.display = 'flex';
+        }
+       
+        function closeTradeChat() {
+            document.getElementById('tradeChat').style.display = 'none';
+        }
+       
+        // AR Try-on functions
+        function openARTryOn() {
+            document.getElementById('arTryOn').style.display = 'flex';
+        }
+       
+        function closeARTryOn() {
+            document.getElementById('arTryOn').style.display = 'none';
+        }
+       
+        // Send message in chat
+        document.querySelector('.send-btn').addEventListener('click', function() {
+            const input = document.querySelector('.chat-input input');
+            const message = input.value.trim();
+           
+            if (message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'buyer-message');
+                messageElement.textContent = message;
+               
+                document.querySelector('.chat-messages').appendChild(messageElement);
+                input.value = '';
+               
+                // Auto-scroll to bottom
+                const chatMessages = document.querySelector('.chat-messages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+               
+                // Simulate seller response after a delay
+                setTimeout(() => {
+                    const responses = [
+                        "That sounds great! Would you be willing to add something else to the trade?",
+                        "I'm not sure if that's a fair trade. Can you offer something else?",
+                        "Perfect! Let's arrange a meetup to exchange items.",
+                        "Do you have any photos of the item you're offering?"
+                    ];
+                   
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    const sellerMessage = document.createElement('div');
+                    sellerMessage.classList.add('message', 'seller-message');
+                    sellerMessage.textContent = randomResponse;
+                   
+                    document.querySelector('.chat-messages').appendChild(sellerMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        });
+       
+        // Allow pressing Enter to send message
+        document.querySelector('.chat-input input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.send-btn').click();
+            }
+        });
+       
+        // Thumbnail initialization - set first one as active
+        document.querySelectorAll('.thumbnail')[0].classList.add('active');
+    </script>
+</body>
+</html>

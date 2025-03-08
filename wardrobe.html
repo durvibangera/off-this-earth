@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my wardrobe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matcha: #CDE990;
+            --strawberry: #FFD4D4;
+            --cream: #FFFFE8;
+            --pink: #FF90BC;
+            --border-color: #333;
+        }
+        
+        body {
+            background-color: var(--cream);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Bubblegum Sans', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .window {
+            width: 90%;
+            max-width: 900px;
+            border: 5px solid var(--border-color);
+            background: var(--matcha);
+            box-shadow: 8px 8px 0px var(--border-color);
+            padding: 0;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        
+        .title-bar {
+            background: var(--strawberry);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            border-bottom: 3px solid var(--border-color);
+        }
+        
+        .title-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .window-btn.close {
+            background-color: #ff6b6b;
+        }
+        
+        .window-btn.minimize {
+            background-color: #ffd93d;
+        }
+        
+        .window-btn.maximize {
+            background-color: #6bcb77;
+        }
+        
+        .window-content {
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 L20 0 L40 20 L20 40 Z" fill="rgba(255,208,208,0.2)"/></svg>');
+        }
+
+        .main-title {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--border-color);
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px var(--pink);
+        }
+        
+        .outfit-row {
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .row-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background-color: var(--pink);
+            padding: 5px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 0px var(--border-color);
+        }
+        
+        .display-container {
+            background: var(--cream);
+            border: 2px solid var(--border-color);
+            box-shadow: 3px 3px 0px var(--border-color);
+            padding: 10px;
+            position: relative;
+            border-radius: 5px;
+            height: 250px; /* Increased height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Prevent overflow */
+        }
+        
+        .display-container img {
+            max-width: 200px; /* Increased max-width */
+            max-height: 220px; /* Increased max-height */
+            object-fit: contain;
+            border: 2px dashed var(--border-color);
+            padding: 5px;
+            background-color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .btn-custom {
+            background: var(--strawberry);
+            border: 2px solid var(--border-color);
+            font-size: 14px;
+            padding: 5px 15px;
+            font-family: 'Press Start 2P', cursive;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--border-color);
+            transition: all 0.1s;
+        }
+        
+        .btn-custom:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+        }
+        
+        .btn-custom:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        .preview-section {
+            margin-top: 30px;
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .preview-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background-color: var(--matcha);
+            padding: 5px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--border-color);
+        }
+        
+        .preview-container {
+            height: 650px; /* Increased height */
+            background: var(--cream);
+            border: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .outfit-preview {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .outfit-preview img {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 280px; /* Increased max-width */
+            max-height: 350px; /* Increased max-height */
+            object-fit: contain;
+        }
+        
+        .logo {
+            width: 180px;
+            display: block;
+            margin: 10px auto 20px;
+            filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.3));
+        }
+        
+        .item-counter {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--border-color);
+        }
+        
+        .timestamp {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--border-color);
+        }
+        
+        .sticker {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="%23FFD4D4" stroke="%23333" stroke-width="2"/><path d="M30,30 Q40,20 50,30 Q60,40 50,50 Q40,60 30,50 Q20,40 30,30 Z" fill="%23FF90BC" stroke="%23333" stroke-width="2"/><circle cx="35" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><circle cx="45" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><path d="M32,45 Q40,52 48,45" stroke="%23333" stroke-width="2" fill="none"/></svg>');
+            transform: rotate(-15deg);
+            z-index: 2;
+            opacity: 0.85;
+            top: -20px;
+            right: -20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <span>WardrobeOS v1.0 </span>
+            <div class="title-buttons">
+                <div class="window-btn minimize"></div>
+                <div class="window-btn maximize"></div>
+                <div class="window-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="window-content">
+            <img src="logo.png" alt="Logo" class="logo">
+            <h1 class="main-title">MY DIGITAL WARDROBE</h1>
+            
+            <!-- Top Row: Tops -->
+            <div class="outfit-row">
+                <div class="sticker"></div>
+                <div class="row-title">TOPS</div>
+                <div class="display-container">
+                    <img id="currentTop" src="" alt="Top">
+                    <div class="item-counter">Item <span id="topCounter">1</span> of <span id="topTotal">5</span></div>
+                    <div class="timestamp" id="topTimestamp">Added: 03/08/25</div>
+                </div>
+                <div class="controls">
+                    <button class="btn-custom" onclick="prevItem('top')">◀ Prev</button>
+                    <button class="btn-custom" onclick="nextItem('top')">Next ▶</button>
+                </div>
+            </div>
+            
+            <!-- Middle Row: Bottoms -->
+            <div class="outfit-row">
+                <div class="row-title">BOTTOMS</div>
+                <div class="display-container">
+                    <img id="currentBottom" src="" alt="Bottom">
+                    <div class="item-counter">Item <span id="bottomCounter">1</span> of <span id="bottomTotal">5</span></div>
+                    <div class="timestamp" id="bottomTimestamp">Added: 03/05/25</div>
+                </div>
+                <div class="controls">
+                    <button class="btn-custom" onclick="prevItem('bottom')">◀ Prev</button>
+                    <button class="btn-custom" onclick="nextItem('bottom')">Next ▶</button>
+                </div>
+            </div>
+            
+                       
+            <!-- Full Outfit Preview -->
+            <div class="preview-section">
+                <div class="preview-title">OUTFIT PREVIEW</div>
+                <div class="preview-container">
+                    <div class="outfit-preview">
+                        <img id="previewTop" src="" alt="Top Preview" style="z-index: 2;">
+                        <img id="previewBottom" src="" alt="Bottom Preview" style="z-index: 1;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Wardrobe items with corrected path format
+        const wardrobe = {
+            tops: [
+                {src: "outfit/tops/top-1.png", added: "03/08/25"},
+                {src: "outfit/tops/top-2.png", added: "03/07/25"},
+                {src: "outfit/tops/top-3.png", added: "03/06/25"},
+                {src: "outfit/tops/top-4.png", added: "03/05/25"},
+                {src: "outfit/tops/top-5.png", added: "03/04/25"}
+            ],
+            bottoms: [
+                {src: "outfit/bottoms/bottom-1.png", added: "03/08/25"},
+                {src: "outfit/bottoms/bottom-2.png", added: "03/07/25"},
+                {src: "outfit/bottoms/bottom-3.png", added: "03/06/25"},
+                {src: "outfit/bottoms/bottom-4.png", added: "03/05/25"},
+                {src: "outfit/bottoms/bottom-5.png", added: "03/04/25"}
+            ]
+        };
+        
+        // Current indices
+        const currentIndices = {
+            top: 0,
+            bottom: 0
+        };
+        
+        // Initialize displays
+        function initializeWardrobe() {
+            // Set totals
+            document.getElementById('topTotal').textContent = wardrobe.tops.length;
+            document.getElementById('bottomTotal').textContent = wardrobe.bottoms.length;
+            
+            // Update all items
+            updateDisplay('top');
+            updateDisplay('bottom');
+            updatePreview();
+        }
+        
+        // Update item display
+        function updateDisplay(type) {
+            const index = currentIndices[type];
+            const items = wardrobe[type + 's']; // pluralize the type to match object keys
+            
+            // Update main display
+            document.getElementById('current' + capitalizeFirstLetter(type)).src = items[index].src;
+            document.getElementById(type + 'Counter').textContent = index + 1;
+            document.getElementById(type + 'Timestamp').textContent = 'Added: ' + items[index].added;
+            
+            // Update preview
+            document.getElementById('preview' + capitalizeFirstLetter(type)).src = items[index].src;
+        }
+        
+        // Update the whole outfit preview
+        function updatePreview() {
+            // Position elements for a more realistic outfit layout
+            const previewTop = document.getElementById('previewTop');
+            const previewBottom = document.getElementById('previewBottom');
+            
+            // Adjust positions for a natural look
+            previewTop.style.top = '30px';
+            previewBottom.style.top = '200px'; // Increased distance between top and bottom
+        }
+        
+        // Navigate to previous item
+        function prevItem(type) {
+            const items = wardrobe[type + 's'];
+            currentIndices[type] = (currentIndices[type] - 1 + items.length) % items.length;
+            updateDisplay(type);
+        }
+        
+        // Navigate to next item
+        function nextItem(type) {
+            const items = wardrobe[type + 's'];
+            currentIndices[type] = (currentIndices[type] + 1) % items.length;
+            updateDisplay(type);
+        }
+        
+        // Helper to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initializeWardrobe);
+    </script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTE Thrift Community - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matcha: #CDE990;
+            --strawberry: #FFD4D4;
+            --cream: #FFFFE8;
+            --pink: #FF90BC;
+            --border-color: #333;
+        }
+        
+        body {
+            background-color: var(--cream);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Bubblegum Sans', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .window {
+            width: 90%;
+            max-width: 1000px;
+            border: 5px solid var(--border-color);
+            background: var(--matcha);
+            box-shadow: 8px 8px 0px var(--border-color);
+            padding: 0;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        
+        .title-bar {
+            background: var(--strawberry);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            border-bottom: 3px solid var(--border-color);
+        }
+        
+        .title-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .window-btn.close {
+            background-color: #ff6b6b;
+        }
+        
+        .window-btn.minimize {
+            background-color: #ffd93d;
+        }
+        
+        .window-btn.maximize {
+            background-color: #6bcb77;
+        }
+        
+        .window-content {
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 L20 0 L40 20 L20 40 Z" fill="rgba(255,208,208,0.2)"/></svg>');
+        }
+        
+        .main-title {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--border-color);
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px var(--pink);
+        }
+        
+        /* Back button */
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--strawberry);
+            border: 2px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--border-color);
+            text-decoration: none;
+            width: fit-content;
+            margin-bottom: 20px;
+            box-shadow: 3px 3px 0 var(--border-color);
+            transition: all 0.2s;
+        }
+        
+        .back-link:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        
+        .back-link:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0px var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px dashed var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            color: var(--pink);
+        }
+        
+        .profile-id {
+            background: var(--matcha);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .profile-content {
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* Profile Photo Section */
+        .profile-photo-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 170px;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            background-color: var(--cream);
+            border: 3px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--matcha);
+            box-shadow: 3px 3px 0px var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .profile-photo:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px var(--border-color);
+        }
+        
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .user-name {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 20px;
+            color: var(--pink);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .join-date, .location {
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--border-color);
+            margin-bottom: 5px;
+        }
+        
+        /* Profile Details */
+        .profile-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            border-bottom: 1px dashed var(--matcha);
+            padding-bottom: 8px;
+        }
+        
+        .detail-label {
+            width: 120px;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            color: var(--border-color);
+        }
+        
+        .detail-value {
+            flex: 1;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 16px;
+        }
+        
+        /* Validation Stamp */
+        .validation-stamp {
+            position: absolute;
+            right: 40px;
+            bottom: 70px;
+            width: 100px;
+            height: 100px;
+            border: 2px dashed var(--pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            color: var(--pink);
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Footer */
+        .profile-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--border-color);
+            border-top: 2px dashed var(--matcha);
+            padding-top: 15px;
+            font-family: 'VT323', monospace;
+        }
+        
+        /* Edit Button */
+        .edit-button {
+            background: var(--strawberry);
+            border: 3px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--border-color);
+            cursor: pointer;
+            margin: 20px auto 0;
+            display: block;
+            width: 200px;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+        
+        .edit-button:hover {
+            background: var(--pink);
+            transform: translateY(-2px);
+        }
+        
+        .edit-button:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+        
+        /* OTE Decorative Elements */
+        .sparkle {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0 L15 9 L25 12.5 L15 16 L12.5 25 L10 16 L0 12.5 L10 9 Z" fill="%23FF90BC" stroke="%23333" stroke-width="1"/></svg>');
+            z-index: 1;
+        }
+        
+        #sparkle1 { top: 50px; left: 10%; }
+        #sparkle2 { top: 150px; right: 15%; }
+        #sparkle3 { bottom: 100px; left: 20%; }
+        #sparkle4 { bottom: 50px; right: 10%; }
+        #sparkle5 { top: 250px; left: 30%; }
+        
+        /* Sticker */
+        .sticker {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="%23FFD4D4" stroke="%23333" stroke-width="2"/><path d="M30,30 Q40,20 50,30 Q60,40 50,50 Q40,60 30,50 Q20,40 30,30 Z" fill="%23FF90BC" stroke="%23333" stroke-width="2"/><circle cx="35" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><circle cx="45" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><path d="M32,45 Q40,52 48,45" stroke="%23333" stroke-width="2" fill="none"/></svg>');
+            transform: rotate(-15deg);
+            z-index: 2;
+            opacity: 0.85;
+            top: -20px;
+            right: -20px;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--cream);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--strawberry);
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+        }
+        
+        /* Animation for sparkles */
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(0, 15px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative OTE Elements -->
+    <div class="sparkle" id="sparkle1" style="animation: float 4s ease-in-out 0.2s infinite alternate;"></div>
+    <div class="sparkle" id="sparkle2" style="animation: float 3.5s ease-in-out 0.5s infinite alternate;"></div>
+    <div class="sparkle" id="sparkle3" style="animation: float 5s ease-in-out 0.8s infinite alternate;"></div>
+    <div class="sparkle" id="sparkle4" style="animation: float 4.2s ease-in-out 1.2s infinite alternate;"></div>
+    <div class="sparkle" id="sparkle5" style="animation: float 3.8s ease-in-out 0.7s infinite alternate;"></div>
+
+    <div class="window">
+        <div class="title-bar">
+            <span>OTECommunityOS v1.0 - User Profile</span>
+            <div class="title-buttons">
+                <div class="window-btn minimize"></div>
+                <div class="window-btn maximize"></div>
+                <div class="window-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="window-content">
+            <h1 class="main-title">✨ OTE THRIFTER PROFILE ✨</h1>
+            
+            <a href="#" class="back-link">← Back to Shop</a>
+            
+            <div class="profile-card">
+                <div class="sticker"></div>
+                
+                <div class="profile-header">
+                    <div class="profile-title">OTE Thrift ID Card</div>
+                    <div class="profile-id">ID: 20230722</div>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="profile-photo-section">
+                        <div class="profile-photo">
+                            <img id="profile-photo" src="/api/placeholder/150/150" alt="Profile Photo">
+                        </div>
+                        <div class="profile-user-info">
+                            <div class="user-name" id="user-name">OTEThrifter</div>
+                            <div class="join-date">Join Date: 2023-07-22</div>
+                            <div class="location">Location: Online</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Status:</div>
+                            <div class="detail-value">Verified Seller</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Member Level:</div>
+                            <div class="detail-value">OTE Enthusiast</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Items Sold:</div>
+                            <div class="detail-value">127</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Rating:</div>
+                            <div class="detail-value">★★★★★ (4.9/5)</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Style:</div>
+                            <div class="detail-value">OTE, Vintage 2000s, Retro</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Bio:</div>
+                            <div class="detail-value">Collector of all things 2000s! Sharing my OTE treasures with the world. ✨👾💖</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="validation-stamp">
+                    VERIFIED<br>OTE<br>MEMBER
+                </div>
+                
+                <div class="profile-footer">
+                    This card certifies the bearer as a friend of OTE Thrift Community
+                </div>
+            </div>
+            
+            <button class="edit-button" id="edit-profile">Edit Profile</button>
+        </div>
+    </div>
+
+    <script>
+        // Add floating animation to sparkles
+        const sparkles = document.querySelectorAll('.sparkle');
+        sparkles.forEach(sparkle => {
+            // Already handled with inline styles for better compatibility
+        });
+        
+        // Simple edit functionality
+        document.getElementById('edit-profile').addEventListener('click', function() {
+            const newName = prompt('Enter your username:', document.getElementById('user-name').textContent);
+            if (newName && newName.trim() !== '') {
+                document.getElementById('user-name').textContent = newName;
+            }
+            
+            const newBio = prompt('Enter your bio:', document.querySelector('.detail-row:last-child .detail-value').textContent);
+            if (newBio && newBio.trim() !== '') {
+                document.querySelector('.detail-row:last-child .detail-value').textContent = newBio;
+            }
+            
+            alert('Profile updated successfully!');
+        });
+        
+        // For demo purposes - allow clicking on photo to "change" it
+        document.getElementById('profile-photo').addEventListener('click', function() {
+            alert('In a full implementation, this would open a file picker to change your profile photo.');
+        });
+    </script>
+</body>
+</html>

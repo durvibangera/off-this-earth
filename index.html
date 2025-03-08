@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off This Earth</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matcha: #CDE990;
+            --strawberry: #FFD4D4;
+            --cream: #FFFFE8;
+            --pink: #FF90BC;
+            --border-color: #333;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Bubblegum Sans', cursive;
+            overflow-x: hidden;
+            background: var(--cream);
+            color: black;
+            padding-top: 0;
+        }
+
+        .parallax {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 120vh;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .layer1 {
+            background-image: url('clouds-top.jpg');
+            transform: translateY(0px) scale(1.5);
+            z-index: 3;
+        }
+
+        .layer2 {
+            background-image: url('clouds.jpg');
+            transform: translateY(0px) scale(1.3);
+            z-index: 2;
+        }
+
+        .layer3 {
+            background-image: url('clouds-bottom.jpg');
+            transform: translateY(0px) scale(1.1);
+            z-index: 1;
+        }
+
+        .logo {
+            position: absolute;
+            z-index: 4;
+            transform: translateY(0px) scale(1);
+            width: 900px; /* Increased from 700px to make logo bigger */
+            height: auto;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 0px 40px rgba(255,255,255,1))
+                   drop-shadow(0px 0px 80px rgba(255,255,255,0.9))
+                   drop-shadow(0px 0px 120px rgba(255,255,255,0.8));
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); } /* Enhanced floating effect */
+            100% { transform: translateY(0px) scale(1); }
+        }
+
+        .logo:hover img {
+            filter: drop-shadow(0px 0px 50px rgba(255,255,255,1))
+                   drop-shadow(0px 0px 100px rgba(255,255,255,0.9))
+                   drop-shadow(0px 0px 150px rgba(255,255,255,0.8));
+            transform: scale(1.15); /* Increased from 1.1 */
+        }
+
+        .navbar {
+            transition: all 0.3s ease;
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--matcha)
+        }
+       
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: slideDown 0.5s;
+        }
+       
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 60px;
+            margin: 0 20px;
+        }
+
+        .video-container {
+            background: var(--strawberry); /* Changed from light pink to strawberry variable */
+            height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border: 5px solid white;
+            outline: 1px solid var(--border-color);
+            padding: 2px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--strawberry);
+        }
+       
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.25);
+        }
+
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .side-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .recommendations, .community-feed {
+            height: 300px; /* Increased from 210px to make taller */
+            background: var(--strawberry);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border: 5px solid white;
+            outline: 1px solid var(--border-color);
+            padding: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+       
+        .recommendations:hover, .community-feed:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+        }
+       
+        .recommendations-title, .community-title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.8);
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 2;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+        }
+       
+        .recommendations-content, .community-content {
+            width: 100%;
+            height: 100%;
+            padding-top: 30px;
+            overflow: hidden;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+            height: 100%;
+            width: 100%;
+        }
+       
+        .recommendation-item {
+            overflow: hidden;
+            border-radius: 8px;
+            position: relative;
+        }
+       
+        .recommendation-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+       
+        .recommendation-item:hover img {
+            transform: scale(1.1);
+        }
+       
+        .recommendation-item:hover::after {
+            content: '+ Add to Cart';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+        }
+
+        .carousel {
+            height: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .carousel-inner {
+            height: 100%;
+        }
+
+        .carousel-item {
+            height: 100%;
+        }
+
+        .carousel-item img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+       
+        .carousel-caption {
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 10px;
+            bottom: 20px;
+            font-family: 'VT323', monospace;
+        }
+       
+        .dropdown-menu {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+       
+        .dropdown-header {
+            font-weight: bold;
+            color: var(--border-color);
+            padding: 8px 16px;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .dropdown-item {
+            padding: 6px 24px;
+            transition: background-color 0.2s;
+        }
+       
+        .dropdown-item:hover {
+            background-color: var(--cream);
+        }
+
+        .navbar-brand img {
+            filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+            height: 60px; /* Increased from 50px */
+        }
+       
+        .navbar-brand:hover img {
+            transform: scale(1.15); /* Increased from 1.1 */
+        }
+       
+        /* Live feed styles */
+        .community-feed-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+       
+        .feed-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+       
+        .feed-content {
+            flex: 1;
+        }
+       
+        .feed-username {
+            font-weight: bold;
+            font-size: 14px;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .feed-text {
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+        }
+       
+        .feed-time {
+            color: #888;
+            font-size: 11px;
+            font-family: 'VT323', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax">
+        <div class="parallax-layer layer1"></div>
+        <div class="parallax-layer layer2"></div>
+        <div class="parallax-layer layer3"></div>
+        <div class="logo"><img src="logo.png" alt="Off This Earth Logo"></div>
+    </div>
+   
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-0" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="wardrobe.html">My Wardrobe</a></li>
+                    <li class="nav-item"><a class="nav-link" href="community.html">Community</a></li>
+                    <li class="nav-item"><a class="nav-link" href="leaderboard.html">Leaderboard</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+   
+    <div class="sections">
+        <div class="video-container" id="videoContainer">
+            <div id="outfitCarousel" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#outfitCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#outfitCarousel" data-slide-to="1"></li>
+                    <li data-target="#outfitCarousel" data-slide-to="2"></li>
+                    <li data-target="#outfitCarousel" data-slide-to="3"></li>
+                    <li data-target="#outfitCarousel" data-slide-to="4"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="d-block w-100" src="top-1.png" alt="Top Style 1">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Stylish Top Collection</h5>
+                            <p>Explore our latest tops for this season</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="bottom-1.png" alt="Bottom Style 1">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Trending Bottoms</h5>
+                            <p>Perfect match for any occasion</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="top-2.png" alt="Top Style 2">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Casual Collection</h5>
+                            <p>Stay comfortable and trendy</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="bottom-2.png" alt="Bottom Style 2">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Premium Denim</h5>
+                            <p>Quality that lasts</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="top-3.png" alt="Top Style 3">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Season Special</h5>
+                            <p>Limited edition designs</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#outfitCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#outfitCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="side-container">
+            <div class="recommendations">
+                <div class="recommendations-title">Based on Your Cart</div>
+                <div class="recommendations-content">
+                    <div class="recommendation-grid">
+                        <div class="recommendation-item">
+                            <img src="top-4.png" alt="Recommended Top">
+                        </div>
+                        <div class="recommendation-item">
+                            <img src="wardrobe\outfit\bottoms\bottom-3.png" alt="Recommended Bottom">
+                        </div>
+                        <div class="recommendation-item">
+                            <img src="top-5.png" alt="Recommended Top">
+                        </div>
+                        <div class="recommendation-item">
+                            <img src="wardrobe\outfit\bottoms\bottom-4.png" alt="Recommended Bottom">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="community-feed">
+                <div class="community-title">Community Live Feed</div>
+                <div class="community-content" id="liveFeed">
+                    <div class="community-feed-item">
+                        <img src="profile1.png" alt="Profile" class="feed-profile-pic">
+                        <div class="feed-content">
+                            <div class="feed-username">FashionGuru92</div>
+                            <div class="feed-text">Just uploaded my summer outfit collection!</div>
+                            <div class="feed-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="community-feed-item">
+                        <img src="profile2.png" alt="Profile" class="feed-profile-pic">
+                        <div class="feed-content">
+                            <div class="feed-username">StyleQueen</div>
+                            <div class="feed-text">Loving the new crop tops from the spring collection!</div>
+                            <div class="feed-time">15 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="community-feed-item">
+                        <img src="profile3.png" alt="Profile" class="feed-profile-pic">
+                        <div class="feed-content">
+                            <div class="feed-username">TrendSetter404</div>
+                            <div class="feed-text">Check out my new wardrobe combination!</div>
+                            <div class="feed-time">32 minutes ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        window.addEventListener("scroll", function() {
+            let scrollY = window.scrollY;
+            document.querySelector(".layer1").style.transform = `translateY(${scrollY * 0.5}px) scale(${1.5 - scrollY * 0.0005})`;
+            document.querySelector(".layer2").style.transform = `translateY(${scrollY * 0.3}px) scale(${1.3 - scrollY * 0.0003})`;
+            document.querySelector(".layer3").style.transform = `translateY(${scrollY * 0.1}px) scale(${1.1 - scrollY * 0.0001})`;
+            document.querySelector(".logo").style.transform = `translateY(${scrollY * -0.2}px) scale(${1 + scrollY * 0.001})`;
+        });
+       
+        const navbar = document.getElementById("mainNav");
+        const navbarHeight = navbar.offsetHeight;
+        const sticky = navbar.offsetTop + 100;
+       
+        window.onscroll = function() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky-nav");
+                document.body.style.paddingTop = navbarHeight + "px";
+            } else {
+                navbar.classList.remove("sticky-nav");
+                document.body.style.paddingTop = "0px";
+            }
+        };
+       
+        $(document).ready(function(){
+            // Initialize carousel for outfit showcase
+            $('#outfitCarousel').carousel({
+                interval: 4000
+            });
+           
+            // Live feed simulation
+            const feedItems = [
+                {username: "FashionGuru92", text: "Just uploaded my summer outfit collection!", time: "2 minutes ago", pic: "profile1.png"},
+                {username: "StyleQueen", text: "Loving the new crop tops from the spring collection!", time: "15 minutes ago", pic: "profile2.png"},
+                {username: "TrendSetter404", text: "Check out my new wardrobe combination!", time: "32 minutes ago", pic: "profile3.png"},
+                {username: "OutfitCreator", text: "Anyone else obsessed with the new accessories?", time: "45 minutes ago", pic: "profile4.png"},
+                {username: "FashionForward", text: "Just posted a review of the latest collection!", time: "1 hour ago", pic: "profile5.png"},
+                {username: "StyleInspiration", text: "How do you style the new denim line?", time: "1.5 hours ago", pic: "profile6.png"}
+            ];
+           
+            // Update feed every 30 seconds
+            setInterval(function() {
+                const randomIndex = Math.floor(Math.random() * feedItems.length);
+                const newItem = feedItems[randomIndex];
+               
+                // Create new feed item
+                const feedItemHTML = `
+                    <div class="community-feed-item" style="display: none;">
+                        <img src="${newItem.pic}" alt="Profile" class="feed-profile-pic">
+                        <div class="feed-content">
+                            <div class="feed-username">${newItem.username}</div>
+                            <div class="feed-text">${newItem.text}</div>
+                            <div class="feed-time">Just now</div>
+                        </div>
+                    </div>
+                `;
+               
+                // Add to the top of the feed
+                $("#liveFeed").prepend(feedItemHTML);
+               
+                // Show with animation and update times
+                $("#liveFeed .community-feed-item:first").slideDown();
+               
+                // Remove oldest item if we have more than 3
+                if ($("#liveFeed .community-feed-item").length > 3) {
+                    $("#liveFeed .community-feed-item:last").remove();
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

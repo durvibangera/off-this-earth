@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Swap Shop - Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matcha: #CDE990;
+            --strawberry: #FFD4D4;
+            --cream: #FFFFE8;
+            --pink: #FF90BC;
+            --border-color: #333;
+        }
+       
+        body {
+            background-color: var(--cream);
+            font-family: 'Bubblegum Sans', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+       
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 95%;
+        }
+       
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+       
+        .header h1 {
+            color: var(--pink);
+            text-shadow: 2px 2px 0px var(--matcha);
+            letter-spacing: 1px;
+            font-size: 2.2em;
+            font-family: 'Press Start 2P', cursive;
+            margin-bottom: 5px;
+        }
+       
+        .header p {
+            font-family: 'VT323', monospace;
+            font-size: 1.5em;
+            color: var(--border-color);
+        }
+       
+        .cart-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 8px 8px 0px var(--border-color);
+            border: 3px solid var(--border-color);
+            position: relative;
+        }
+       
+        .cart-title {
+            color: var(--border-color);
+            border-bottom: 3px dashed var(--matcha);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 2px dotted var(--matcha);
+            align-items: center;
+        }
+       
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid var(--strawberry);
+        }
+       
+        .cart-item-details {
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+       
+        .cart-item-name {
+            font-weight: bold;
+            color: var(--border-color);
+            font-size: 1.1em;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+       
+        .cart-item-price {
+            color: var(--pink);
+            font-weight: bold;
+            font-size: 1.2em;
+            font-family: 'VT323', monospace;
+        }
+       
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+       
+        .qty-btn {
+            background-color: var(--matcha);
+            border: 2px solid var(--border-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            color: var(--border-color);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 var(--border-color);
+            font-size: 1.2em;
+            transition: all 0.1s;
+            font-family: 'VT323', monospace;
+        }
+       
+        .qty-btn:hover {
+            background-color: var(--pink);
+            transform: translateY(-2px);
+        }
+       
+        .qty-btn:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+       
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            margin: 0 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'VT323', monospace;
+        }
+       
+        .cart-summary {
+            margin-top: 20px;
+            background-color: var(--strawberry);
+            color: var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 0 var(--border-color);
+            border: 2px solid var(--border-color);
+        }
+       
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            font-family: 'VT323', monospace;
+        }
+       
+        .summary-total {
+            font-weight: bold;
+            font-size: 1.3em;
+            border-top: 3px dashed white;
+            margin-top: 15px;
+            padding-top: 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+        }
+       
+        .checkout-btn {
+            background-color: var(--pink);
+            color: white;
+            border: 2px solid var(--border-color);
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0 var(--border-color);
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+        }
+       
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 3px 6px 0 var(--border-color);
+        }
+       
+        .checkout-btn:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+       
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+       
+        .modal-content {
+            background-color: var(--cream);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 80%;
+            box-shadow: 8px 8px 0 var(--border-color);
+            border: 4px solid var(--border-color);
+            position: relative;
+        }
+       
+        .modal-header {
+            color: var(--border-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+       
+        .modal-header h2 {
+            color: var(--border-color);
+            text-shadow: 2px 2px 0 var(--matcha);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1em;
+        }
+       
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: var(--pink);
+            transition: transform 0.3s ease;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+       
+        .form-group {
+            margin-bottom: 15px;
+        }
+       
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--border-color);
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.65em;
+        }
+       
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-family: 'VT323', monospace;
+            font-size: 1.2em;
+            background-color: white;
+        }
+       
+        .card-input-container {
+            display: flex;
+            gap: 10px;
+        }
+       
+        .card-input-container .form-input {
+            flex: 1;
+        }
+       
+        .pay-btn {
+            background-color: var(--matcha);
+            color: var(--border-color);
+            border: 2px solid var(--border-color);
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            box-shadow: 3px 3px 0 var(--border-color);
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.3s ease;
+        }
+       
+        .pay-btn:hover {
+            background-color: var(--pink);
+            transform: translateY(-3px);
+            box-shadow: 3px 6px 0 var(--border-color);
+            color: white;
+        }
+       
+        .pay-btn:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+       
+        /* Cute Bill */
+        .bill-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+       
+        .bill-container {
+            background-color: var(--cream);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 8px 8px 0 var(--border-color);
+            position: relative;
+            border: 3px solid var(--border-color);
+            animation: popIn 0.5s ease-out;
+        }
+       
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+       
+        .bill-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.3em;
+            cursor: pointer;
+            color: var(--pink);
+            z-index: 10;
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .bill-header {
+            text-align: center;
+            color: var(--border-color);
+            margin-bottom: 15px;
+        }
+       
+        .bill-title {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: var(--border-color);
+            text-shadow: 2px 2px 0 var(--strawberry);
+            font-family: 'Press Start 2P', cursive;
+        }
+       
+        .bill-subtitle {
+            font-size: 1.1em;
+            color: var(--border-color);
+            margin-bottom: 20px;
+            font-family: 'VT323', monospace;
+        }
+       
+        .bill-decoration {
+            position: absolute;
+            font-size: 2em;
+            color: var(--matcha);
+        }
+       
+        .dec-1 {
+            top: 15px;
+            left: 15px;
+        }
+       
+        .dec-2 {
+            top: 15px;
+            right: 15px;
+        }
+       
+        .dec-3 {
+            bottom: 15px;
+            left: 15px;
+        }
+       
+        .dec-4 {
+            bottom: 15px;
+            right: 15px;
+        }
+       
+        .bill-items {
+            border-top: 3px dashed var(--matcha);
+            border-bottom: 3px dashed var(--matcha);
+            padding: 15px 0;
+            margin-bottom: 15px;
+        }
+       
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            font-family: 'VT323', monospace;
+        }
+       
+        .bill-item-name {
+            color: var(--border-color);
+            font-weight: bold;
+        }
+       
+        .bill-item-price {
+            color: var(--pink);
+            font-weight: bold;
+        }
+       
+        .bill-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.75em;
+        }
+       
+        .bill-total-label {
+            color: var(--border-color);
+        }
+       
+        .bill-total-amount {
+            color: var(--pink);
+        }
+       
+        .bill-message {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--border-color);
+            font-weight: bold;
+            font-size: 1.2em;
+            font-family: 'Bubblegum Sans', cursive;
+        }
+       
+        .bill-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1em;
+            color: var(--border-color);
+            font-family: 'VT323', monospace;
+        }
+       
+        .hearts {
+            color: var(--pink);
+        }
+       
+        .print-btn {
+            background-color: var(--strawberry);
+            color: var(--border-color);
+            border: 2px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 3px 3px 0 var(--border-color);
+            transition: all 0.3s ease;
+        }
+       
+        .print-btn:hover {
+            background-color: var(--pink);
+            transform: translateY(-2px);
+            color: white;
+        }
+       
+        .print-btn:active {
+            box-shadow: 1px 1px 0 var(--border-color);
+            transform: translateY(2px);
+        }
+       
+        .sticker {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="%23FFD4D4" stroke="%23333" stroke-width="2"/><path d="M30,30 Q40,20 50,30 Q60,40 50,50 Q40,60 30,50 Q20,40 30,30 Z" fill="%23FF90BC" stroke="%23333" stroke-width="2"/><circle cx="35" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><circle cx="45" cy="35" r="5" fill="white" stroke="%23333" stroke-width="1"/><path d="M32,45 Q40,52 48,45" stroke="%23333" stroke-width="2" fill="none"/></svg>');
+            transform: rotate(-15deg);
+            z-index: 2;
+            opacity: 0.85;
+            top: -20px;
+            right: -20px;
+        }
+       
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+           
+            .cart-item-details {
+                padding: 10px 0;
+            }
+           
+            .cart-item-quantity {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ Treasure Swap Shop ✨</h1>
+            <p>Find your preloved treasures here!</p>
+        </div>
+       
+        <div class="cart-container">
+            <div class="sticker"></div>
+            <h2 class="cart-title">Your Treasure Collection</h2>
+           
+            <div id="cart-items">
+                <!-- Cart items will be added here dynamically -->
+            </div>
+           
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Treasure Value:</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Magic:</span>
+                    <span id="shipping">$5.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Community Support Fee:</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total Adventure Cost:</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+           
+            <button class="checkout-btn" onclick="openPaymentModal()">Secure Your Treasures!</button>
+        </div>
+       
+        <!-- Payment Modal -->
+        <div id="payment-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closePaymentModal()">&times;</span>
+                <div class="modal-header">
+                    <h2>Treasure Swap Payment</h2>
+                </div>
+               
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Your Name</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="form-label" for="email">Treasure Map (Email)</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="form-label" for="card-number">Magic Card Number</label>
+                        <input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                   
+                    <div class="card-input-container">
+                        <div class="form-group">
+                            <label class="form-label" for="expiry">Expiry Spell</label>
+                            <input type="text" id="expiry" class="form-input" placeholder="MM/YY" required>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label class="form-label" for="cvv">Secret Code</label>
+                            <input type="text" id="cvv" class="form-input" placeholder="123" required>
+                        </div>
+                    </div>
+                   
+                    <button type="submit" class="pay-btn">Complete Treasure Exchange</button>
+                </form>
+            </div>
+        </div>
+       
+        <!-- Cute Bill (Now in a modal) -->
+        <div id="bill-modal" class="bill-modal">
+            <div class="bill-container">
+                <span class="bill-close" onclick="closeBillModal()">&times;</span>
+               
+                <div class="bill-decoration dec-1">✿</div>
+                <div class="bill-decoration dec-2">✿</div>
+                <div class="bill-decoration dec-3">✿</div>
+                <div class="bill-decoration dec-4">✿</div>
+               
+                <div class="bill-header">
+                    <div class="bill-title">Treasure Acquired!</div>
+                    <div class="bill-subtitle">Your preloved items are on their way</div>
+                </div>
+               
+                <div class="bill-items" id="bill-items">
+                    <!-- Bill items will be added here dynamically -->
+                </div>
+               
+                <div class="bill-total">
+                    <span class="bill-total-label">Adventure Total</span>
+                    <span class="bill-total-amount" id="bill-total">$0.00</span>
+                </div>
+               
+                <div class="bill-message">One person's old treasure is another's new joy! ʕ•ᴥ•ʔ</div>
+               
+                <div class="bill-footer">
+                    <p>Swapped with <span class="hearts">♥♥♥</span> just for you!</p>
+                    <p id="order-date"></p>
+                </div>
+               
+                <button class="print-btn" onclick="window.print()">Print Treasure Receipt</button>
+            </div>
+        </div>
+    </div>
+   
+    <script>
+        // Sample cart items (these would normally come from your cart system)
+        const sampleItems = [
+            {
+                id: 1,
+                name: "Vintage Tea Cup Set",
+                price: 12.99,
+                quantity: 1,
+                image: "/api/placeholder/80/80"
+            },
+            {
+                id: 2,
+                name: "Preloved Chunky Knit Sweater",
+                price: 8.50,
+                quantity: 2,
+                image: "/api/placeholder/80/80"
+            },
+            {
+                id: 3,
+                name: "Retro Record Collection",
+                price: 15.75,
+                quantity: 1,
+                image: "/api/placeholder/80/80"
+            }
+        ];
+       
+        // Initialize cart
+        let cartItems = [...sampleItems];
+       
+        // Function to render cart items
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+           
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: var(--border-color); font-size: 1.2em; font-family: \'Press Start 2P\', cursive; font-size: 0.8em; margin: 30px 0;">Your treasure chest is empty!</p>';
+                return;
+            }
+           
+            let subtotal = 0;
+           
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+               
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                        <input type="number" value="${item.quantity}" min="1" class="qty-input" onchange="updateQuantityInput(${item.id}, this.value)">
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                    </div>
+                    <div style="font-weight: bold; color: var(--border-color); font-family: 'VT323', monospace; font-size: 1.2em;">$${itemTotal.toFixed(2)}</div>
+                    <button class="qty-btn" onclick="removeItem(${item.id})" style="background-color: var(--pink); color: white;">×</button>
+                `;
+               
+                cartItemsContainer.appendChild(itemElement);
+            });
+           
+            // Update summary
+            const tax = subtotal * 0.08; // Assuming 8% tax
+            const shipping = 5; // Flat shipping rate
+            const total = subtotal + tax + shipping;
+           
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('shipping').textContent = `$${shipping.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+       
+        // Function to update quantity
+        function updateQuantity(itemId, newQuantity) {
+            if (newQuantity < 1) newQuantity = 1;
+           
+            const itemIndex = cartItems.findIndex(item => item.id === itemId);
+            if (itemIndex !== -1) {
+                cartItems[itemIndex].quantity = newQuantity;
+                renderCart();
+            }
+        }
+       
+        // Function to update quantity from input
+        function updateQuantityInput(itemId, value) {
+            updateQuantity(itemId, parseInt(value) || 1);
+        }
+       
+        // Function to remove item
+        function removeItem(itemId) {
+            cartItems = cartItems.filter(item => item.id !== itemId);
+            renderCart();
+        }
+       
+        // Payment modal functions
+        function openPaymentModal() {
+            document.getElementById('payment-modal').style.display = 'flex';
+        }
+       
+        function closePaymentModal() {
+            document.getElementById('payment-modal').style.display = 'none';
+        }
+       
+        // Bill modal functions
+        function openBillModal() {
+            document.getElementById('bill-modal').style.display = 'flex';
+        }
+       
+        function closeBillModal() {
+            document.getElementById('bill-modal').style.display = 'none';
+        }
+       
+        // Process payment and generate cute bill
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+           
+            // Here you would normally process the payment with a payment gateway
+            // For this demo, we'll just generate the cute bill
+           
+            closePaymentModal();
+            generateCuteBill();
+            openBillModal(); // Open bill as a popup
+        });
+       
+        function generateCuteBill() {
+            const billItemsContainer = document.getElementById('bill-items');
+            billItemsContainer.innerHTML = '';
+           
+            let total = 0;
+           
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+               
+                const billItem = document.createElement('div');
+                billItem.className = 'bill-item';
+                billItem.innerHTML = `
+                    <span class="bill-item-name">${item.name} × ${item.quantity}</span>
+                    <span class="bill-item-price">$${itemTotal.toFixed(2)}</span>
+                `;
+               
+                billItemsContainer.appendChild(billItem);
+            });
+           
+            // Add shipping and tax
+            const tax = total * 0.08;
+            const shipping = 5;
+           
+            const taxItem = document.createElement('div');
+            taxItem.className = 'bill-item';
+            taxItem.innerHTML = `
+                <span class="bill-item-name">Community Support Fee</span>
+                <span class="bill-item-price">$${tax.toFixed(2)}</span>
+            `;
+            billItemsContainer.appendChild(taxItem);
+           
+            const shippingItem = document.createElement('div');
+            shippingItem.className = 'bill-item';
+            shippingItem.innerHTML = `
+                <span class="bill-item-name">Delivery Magic</span>
+                <span class="bill-item-price">$${shipping.toFixed(2)}</span>
+            `;
+            billItemsContainer.appendChild(shippingItem);
+           
+            // Update total
+            const grandTotal = total + tax + shipping;
+            document.getElementById('bill-total').textContent = `$${grandTotal.toFixed(2)}`;
+           
+            // Set order date
+            const now = new Date();
+            document.getElementById('order-date').textContent = `Treasure Swap Date: ${now.toLocaleDateString()}`;
+        }
+       
+        // Initialize the cart when the page loads
+        window.onload = renderCart;
+    </script>
+</body>
+</html>
